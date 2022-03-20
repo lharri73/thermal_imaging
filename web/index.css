@@ -1,0 +1,88 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.link {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.link > div {
+    padding: 5px 10px;
+    color: red;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.home {
+    width: 100%;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+}
+
+.home > .show {
+    width: 40%;
+}
+
+.home > .list {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    overflow: hidden;
+    padding-top: 20px;
+}
+
+.home > .list > .item {
+    width: calc(20%);
+    cursor: pointer;
+    padding: 2px;
+    border: 1px solid transparent;
+}
+
+.home > .list > .item:hover > img {
+    opacity: 0.7;
+}
+
+.update-time {
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    color: #444;
+}
+
+@media only screen and (max-width: 600px) {
+    .home > .show {
+        width: calc(100% - 20px);
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .home > .show {
+        width: 100%;
+    }
+
+    .home {
+        padding: 0 10px;
+    }
+
+    .home > .list {
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .home > .list > .item {
+        width: 33.33%;
+    }
+}
