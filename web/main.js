@@ -14,6 +14,11 @@ const getMostRecentFile = (dir) => {
   return files.length ? files[0] : null;
 };
 
+const Datastore = require("nedb")
+const database = new Datastore("database.db")
+database.loadDatabase();
+
+
 function getFileContents(url){
     // DANGER: this could read the whole filesystem to the internet...I don't care
     // (give it a path with '..')
@@ -83,6 +88,11 @@ const requestListener = function (req, res) {
             res.end("Invalid Route");
             break;
     }
+
+    //Testing
+    console.log("requested")
+    //database.insert({min: "50", max: "70"})
+    
 };
 
 const host = '0.0.0.0';
