@@ -14,9 +14,11 @@ const getMostRecentFile = (dir) => {
   return files.length ? files[0] : null;
 };
 
+// Load Data Base
 const Datastore = require("nedb")
 const database = new Datastore("database.db")
 database.loadDatabase();
+var counter = 0
 
 
 function getFileContents(url){
@@ -89,9 +91,15 @@ const requestListener = function (req, res) {
             break;
     }
 
-    //Testing
-    console.log("requested")
-    //database.insert({min: "50", max: "70"})
+    //Testing database storing
+    counter += 1
+    if (counter % 8 == 0)
+    { 
+        console.log(counter) 
+        //Storing values into database
+        database.insert({min: "50", max: "70", mean: "60"})
+    }
+    
     
 };
 
