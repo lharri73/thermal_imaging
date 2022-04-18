@@ -27,8 +27,8 @@ img {
     height: 100px;
     background-color: #FFFFFF;
     position: absolute;
-    top: 120px;
-    left: 1550px;
+    top: 10vh;
+    left: calc(100% - 180px);
     border: 1px solid black;
 
 }    

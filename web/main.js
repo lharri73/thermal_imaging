@@ -83,7 +83,7 @@ const requestListener = function (req, res) {
             break;
         case (req.url == '/test'):
             res.writeHead(200);
-            res.end("test route");
+            res.end("test route " + counter);
             break;
         default:
             res.writeHead(404);
