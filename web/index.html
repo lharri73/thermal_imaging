@@ -11,26 +11,43 @@
 
         <link rel="stylesheet" href="./index.css">
         <script src="js/index.js"></script>
+        <script>
+            // setTimeout(function(){
+            //     window.location.reload(1);
+            // }, 2000);
+            // window.onload = function(){
+            //     const curDate = new Date();
+            //     const curTime = `${curDate.getHours()}:${curDate.getMinutes()}:${curDate.getSeconds()}`
+            //     document.getElementById('update-time').innerHTML = curTime;
+            // }
+        </script>
     </head>
 
     <body>
         <div class="home">
-            <div class="show" id="show">
-                <canvas id="canvas"></canvas>
+            <div class="show">
+                <img src="" alt="" id="imgCurrent">
             </div>
-            <div class="temp-display">
-                <h4>Temperature Display</h4><br>
-                <div><label>Min: <output>50</output></label></div>                  
-                <div><label>Max: <output>70</output></label></div>                  
-            </div>    
+            <div class="temperature">
+                <div class="title">Temperature</div>
+                <div class="line">
+                    <label for="">Min</label>
+                    <input type="text" id="inp_min" value="0" disabled>
+                </div>
+                <div class="line">
+                    <label for="">Max</label>
+                    <input type="text" id="inp_max" value="0" disabled>
+                </div>
+            </div>
             <div class="update-time">Update time : <label id="update-time">00:00:00</label></div>
             <div class="list">
-                <div class="item" id="img0"><img src="/0.jpg" alt=""></div>
-                <div class="item" id="img1"><img src="/1.jpg" alt=""></div>
-                <div class="item" id="img2"><img src="/2.jpg" alt=""></div>
-                <div class="item" id="img3"><img src="/3.jpg" alt=""></div>
-                <div class="item" id="img4"><img src="/4.jpg" alt=""></div>
+                <div class="item" id="img0"><img src="" alt=""></div>
+                <div class="item" id="img1"><img src="" alt=""></div>
+                <div class="item" id="img2"><img src="" alt=""></div>
+                <div class="item" id="img3"><img src="" alt=""></div>
+                <div class="item" id="img4"><img src="" alt=""></div>
             </div>
         </div>
+        
     </body>
 </html>
