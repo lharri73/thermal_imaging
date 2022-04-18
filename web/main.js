@@ -22,7 +22,7 @@ const min_max_db = new Datastore("min_max_table.db")
 db.loadDatabase();
 min_max_db.loadDatabase();
 min_max_db.count({}, function (err, count) {
-    if (count < 1) min_max_db.insert({min: 1000, max: 0})
+    if (count < 1) min_max_db.insert({min: 1000, max: 0, _id: "RpTiSugs3px2uSEK"})
   });
 var counter = 0;
 
@@ -107,10 +107,16 @@ const requestListener = function (req, res) {
         db.insert({min: 50, max: 70, mean: 0})
         // Get the most updated min and max values for website table
         min_max_db.update({ _id: "RpTiSugs3px2uSEK" }, { $min: { min: 50 } }, {}, function () {
-          });
+            });
         min_max_db.update({ _id: "RpTiSugs3px2uSEK" }, { $max: { max: counter } }, {}, function () {
-        });
+            });
+        // Updates the min max table
         min_max_db.persistence.compactDatafile()
+        
+        // values can be retrieved here
+        min_max_db.find({ _id: "RpTiSugs3px2uSEK" }, function (err, docs) {
+            console.log(docs)
+            });
     }
     
     
