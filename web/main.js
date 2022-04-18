@@ -14,11 +14,18 @@ const getMostRecentFile = (dir) => {
   return files.length ? files[0] : null;
 };
 
+
 // Load Data Base
 const Datastore = require("nedb")
-const database = new Datastore("database.db")
-database.loadDatabase();
-var counter = 0
+const db = new Datastore("database.db")
+const min_max_db = new Datastore("min_max_table.db")
+db.loadDatabase();
+min_max_db.loadDatabase();
+min_max_db.count({}, function (err, count) {
+    if (count < 1) min_max_db.insert({min: 1000, max: 0})
+  });
+var counter = 0;
+
 
 
 function getFileContents(url){
@@ -91,13 +98,19 @@ const requestListener = function (req, res) {
             break;
     }
 
-    //Testing database storing
+    // Testing database storing
     counter += 1
     if (counter % 8 == 0)
     { 
         console.log(counter) 
-        //Storing values into database
-        database.insert({min: "50", max: "70", mean: "60"})
+        // Storing values into database
+        db.insert({min: 50, max: 70, mean: 0})
+        // Get the most updated min and max values for website table
+        min_max_db.update({ _id: "RpTiSugs3px2uSEK" }, { $min: { min: 50 } }, {}, function () {
+          });
+        min_max_db.update({ _id: "RpTiSugs3px2uSEK" }, { $max: { max: counter } }, {}, function () {
+        });
+        min_max_db.persistence.compactDatafile()
     }
     
     
