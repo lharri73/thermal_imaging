@@ -14,12 +14,11 @@ const getMostRecentFile = (dir) => {
   return files.length ? files : null;
 };
 
-<<<<<<< Updated upstream
 const getTemperature = () => {
     const data = fs.readFileSync('./temperature.txt');
     return data.toString().split("|");
 };
-=======
+
 
 // Load Data Base
 const Datastore = require("nedb")
@@ -33,7 +32,6 @@ min_max_db.count({}, function (err, count) {
 var counter = 0;
 
 
->>>>>>> Stashed changes
 
 function getFileContents(url){
     // DANGER: this could read the whole filesystem to the internet...I don't care
@@ -108,8 +106,7 @@ const requestListener = function (req, res) {
             res.end("Invalid Route");
             break;
     }
-<<<<<<< Updated upstream
-=======
+
 
     // Testing database storing
     counter += 1;
@@ -133,7 +130,7 @@ const requestListener = function (req, res) {
     }
     
     
->>>>>>> Stashed changes
+
 };
 
 
