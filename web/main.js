@@ -100,17 +100,25 @@ const requestListener = function (req, res) {
             res.end(JSON.stringify(getTemperature()));
             break;
         case (req.url == '/add_rect'):
-	        console.log(req);
             req.on('data', (data)=>{
                 let str = JSON.parse(data.toString());
                 var sql = `INSERT INTO rect_pos (min_x, max_x, min_y, max_y) VALUES (${str.minX}, ${str.maxX}, ${str.minY}, ${str.maxY})`
                 console.log(sql);
-                  con.query(sql, function (err, result) {
-                      if (err) throw err;
-                      console.log("1 record inserted");
-                  });
+                con.query(sql, function (err, result) {
+                    if (err) throw err;
+                    console.log("1 record inserted");
+                });
             })
-	        break;
+            res.writeHead(200);
+	    res.end();
+            break;
+        case (req.url == "/clear_rect"):
+            var sql = `DELETE FROM rect_pos`
+            con.query(sql, function (err, result) {
+                if (err) throw err;
+            });
+            res.writeHead(200);
+            res.end();
         default:
             res.writeHead(404);
             res.end("Invalid Route");

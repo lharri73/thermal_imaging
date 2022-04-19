@@ -37,7 +37,6 @@ def connect():
       password="supersecretpassword",
       database='sd_values'
     )
-
     return mydb
 
 def get_rects(db):
@@ -45,9 +44,10 @@ def get_rects(db):
     cursor = db.cursor()
     cursor.execute(query)
     data = []
-    for (minX, minY, maxX, maxY) in cursor:
+    results = cursor.fetchall()
+    db.commit()
+    for (minX, minY, maxX, maxY) in results:
         data.append([minX, minY, maxX, maxY])
-        print(data[-1])
     cursor.close()
     return data
 
@@ -61,19 +61,30 @@ def main():
 
     db = connect()
 
-    i=0
+    i=6
     data = []
+    rect_color = [0,255,0]
     with Lepton('/dev/spidev0.1') as l:
-        while i < 10:
-            rects = get_rects(db)
+        while True:
             rgb, ir = get_images(l, adjust=True)
             gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
             data.append(ir)
             #cv2.imwrite(f"images/ir/{i:04d}.jpg", ir)
             #cv2.imwrite(f"images/rgb/{i:04d}.jpg", rgb)
-            #i+=1
+            i+=1
             fused = fuse(ir, gray)
-            cv2.imshow("blended", fused)
+            rects = get_rects(db)
+            print(rects)
+            for rect in rects:
+                fused = cv2.rectangle(
+                            fused, 
+                            (rect[0], rect[1]), 
+                            (rect[2], rect[3]), 
+                            rect_color, 
+                            5
+                        )
+    #        cv2.imshow("blended", fused)
+            cv2.imwrite(f"../web/img/{i}.jpg", fused)
             cv2.waitKey(500)
 
 

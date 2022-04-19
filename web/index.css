@@ -84,6 +84,10 @@ img {
 
 /* +++++++++++++++++++++++++++++++++ */
 
+#clearBut {
+    width: 100%;
+}
+
 .home > .temperature {
     position: absolute;
     right: 20px;

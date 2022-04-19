@@ -1,9 +1,10 @@
-const timeoutId = setTimeout(function(){
+var timeoutId = setTimeout(function(){
     window.location.reload(1);
 }, 10000);
 
 var isDrawing = false;
 var startX, startY;
+var ratio = [1,1];
 
 window.onload = function(){
     const curDate = new Date();
@@ -15,13 +16,25 @@ window.onload = function(){
     setupClickEvents(canvas, ctx);
 }
 
+function sendClear(e){
+    fetch("/clear_rect", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: "garbage"
+    }).then(() => {
+        alert("Cleared!");
+    });
+}
+
 function setupAndRegister(canvas, ctx){
     var img = new Image();
     img.src = '/0.jpg';
     img.onload = function(){
         fill_canvas(canvas, ctx, img);
     }
+    document.getElementById("clearBut").onclick = sendClear;
 }
+
 
 function fill_canvas(canvas, ctx, img){
     // CREATE CANVAS CONTEXT.
@@ -32,6 +45,8 @@ function fill_canvas(canvas, ctx, img){
     canvas.width = width;
     canvas.height = height;
     ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, width, height);       // DRAW THE IMAGE TO THE CANVAS.
+    ratio[0] = img.width / width;
+    ratio[1] = img.height / height;
 }
 
 function setupClickEvents(canvas, ctx){
@@ -44,16 +59,16 @@ function setupClickEvents(canvas, ctx){
             ctx.rect(startX,startY,mouseX-startX,mouseY-startY);
             ctx.fill();
             canvas.style.cursor="default";
-            data = {
-                minX: Math.min(startX, mouseX),
-                maxX: Math.max(startX, mouseX),
-                minY: Math.min(startY, mouseY),
-                maxY: Math.max(startY, mouseY)
+            let data = {
+                minX: Math.min(startX, mouseX) * ratio[0],
+                maxX: Math.max(startX, mouseX) * ratio[0],
+                minY: Math.min(startY, mouseY) * ratio[1],
+                maxY: Math.max(startY, mouseY) * ratio[1]
             };
             fetch("/add_rect", {
               method: "POST",
               headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify(data);
+              body: JSON.stringify(data)
             });
             timeoutId = setTimeout(function(){
                 window.location.reload(1);
