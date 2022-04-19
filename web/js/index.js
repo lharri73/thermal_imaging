@@ -44,11 +44,20 @@ function setupClickEvents(canvas, ctx){
             ctx.rect(startX,startY,mouseX-startX,mouseY-startY);
             ctx.fill();
             canvas.style.cursor="default";
-		fetch("/post/data/here", {
-		  method: "POST",
-		  headers: {'Content-Type': 'application/json'},
-		  body: JSON.stringify(data)
-		})
+            data = {
+                minX: Math.min(startX, mouseX),
+                maxX: Math.max(startX, mouseX),
+                minY: Math.min(startY, mouseY),
+                maxY: Math.max(startY, mouseY)
+            };
+            fetch("/add_rect", {
+              method: "POST",
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify(data);
+            });
+            timeoutId = setTimeout(function(){
+                window.location.reload(1);
+            }, 10000);
         }else{
             isDrawing=true;
             startX=mouseX;
