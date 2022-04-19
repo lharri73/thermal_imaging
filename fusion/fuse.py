@@ -1,6 +1,5 @@
 import cv2
 import sys
-from tqdm import trange
 
 W_FACTOR = 32
 H_FACTOR = W_FACTOR
@@ -9,20 +8,18 @@ y_offset = 370   # actually x
 
 final_factor = .3
 
-for i in range(44):
-    runOnce(i)
+#for i in range(44):
+#    runOnce(i)
 
-def runOnce(i):
-    ir = cv2.imread(f"ir/{i:04d}.jpg")
-    rgb = cv2.imread(f"rgb/{i:04d}.jpg")
+def fuse(ir, rgb):
     width = int(ir.shape[1]*W_FACTOR)
     height = int(ir.shape[0]*H_FACTOR)
     w2 = int(rgb.shape[1])
     h2 = int(rgb.shape[0])
-    ir = cv2.resize(ir, (width,height), interpolation=cv2.INTER_AREA)
+    ir = cv2.resize(ir, (width,height), interpolation=cv2.INTER_LINEAR)
     rgb = cv2.resize(rgb, (w2,h2), interpolation=cv2.INTER_AREA)
     out2 = cv2.convertScaleAbs(ir, alpha=2, beta=0)
-    rgb = rgb[x_offset:ir.shape[0]+x_offset, y_offset:ir.shape[1]+y_offset, :]
+    rgb = rgb[x_offset:ir.shape[0]+x_offset, y_offset:ir.shape[1]+y_offset]
     dst = cv2.addWeighted(rgb, 0.3, out2, 0.7, 0)
     
     final = cv2.resize(dst, 
@@ -31,5 +28,7 @@ def runOnce(i):
                            int(dst.shape[0]*final_factor),
                        ),
                        interpolation=cv2.INTER_AREA)
-    cv2.imshow("blended", final)
-    cv2.waitKey(0)
+    return final
+
+if __name__ == "__main__":
+    print("run main.py")

@@ -45,6 +45,11 @@ function setupClickEvents(canvas, ctx){
             ctx.rect(startX,startY,mouseX-startX,mouseY-startY);
             ctx.fill();
             canvas.style.cursor="default";
+		fetch("/post/data/here", {
+		  method: "POST",
+		  headers: {'Content-Type': 'application/json'},
+		  body: JSON.stringify(data)
+		})
         }else{
             isDrawing=true;
             startX=mouseX;
@@ -54,3 +59,4 @@ function setupClickEvents(canvas, ctx){
         }
     }
 }
+

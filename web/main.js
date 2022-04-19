@@ -2,6 +2,7 @@ const fs = require('fs');
 const readdirSync = fs.readdirSync;
 const lstatSync = fs.lstatSync;
 const http = require('http');
+const mysql = require('mysql');
 
 const orderRecentFiles = (dir) =>
   readdirSync(dir)
@@ -15,16 +16,17 @@ const getMostRecentFile = (dir) => {
 };
 
 
-// Load Data Base
-const Datastore = require("nedb")
-const db = new Datastore("database.db")
-const min_max_db = new Datastore("min_max_table.db")
-db.loadDatabase();
-min_max_db.loadDatabase();
-min_max_db.count({}, function (err, count) {
-    if (count < 1) min_max_db.insert({min: 1000, max: 0, _id: "RpTiSugs3px2uSEK"})
-  });
-var counter = 0;
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "sd",
+  password: "supersecretpassword",
+  database: "sd_values"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
 
 
 
@@ -92,6 +94,9 @@ const requestListener = function (req, res) {
             res.writeHead(200);
             res.end("test route " + counter);
             break;
+	case (req.url == '/post/data/here'):
+		console.log(req);
+		break;
         default:
             res.writeHead(404);
             res.end("Invalid Route");

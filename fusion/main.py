@@ -1,7 +1,10 @@
 import numpy as np
 import cv2
 from pylepton import Lepton
+from matplotlib import pyplot as plt
 import time
+import pickle
+from fuse import fuse
 
 CHECKERBOARD = (7,7)
 criteria = (cv2.TERM_CRITERIA_EPS + 
@@ -38,31 +41,21 @@ def main():
     imgpoints = [] # 2d points in image plane.
 
     i=0
+    data = []
     with Lepton('/dev/spidev0.1') as l:
-        while True:
-            rgb, ir = get_images(l)
+        while i < 10:
+            rgb, ir = get_images(l, adjust=True)
             gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
-
-#            print("finding chessboard")
-#            ret, corners = cv2.findChessboardCorners(
-#                    gray,
-#                    CHECKERBOARD,
-#                    cv2.CALIB_CB_ADAPTIVE_THRESH + 
-#                    cv2.CALIB_CB_FAST_CHECK +
-#                    cv2.CALIB_CB_NORMALIZE_IMAGE)
-#            print("found chessboardCorners")
-#            if ret:
-#                corners2 = cv2.cornerSubPix(gray,corners, (11,11), (-1,-1), criteria)
-#                imgpoints.append(corners)
-#                # Draw and display the corners
-#                cv2.drawChessboardCorners(rgb, (7,6), corners2, ret)
-#                cv2.imshow('img', rgb)
-#                cv2.waitKey(500)
-            cv2.imshow('img', rgb)
-            cv2.imwrite(f"images/ir/{i:04d}.jpg", ir)
-            cv2.imwrite(f"images/rgb/{i:04d}.jpg", rgb)
-            i+=1
+            data.append(ir)
+            #cv2.imwrite(f"images/ir/{i:04d}.jpg", ir)
+            #cv2.imwrite(f"images/rgb/{i:04d}.jpg", rgb)
+            #i+=1
+            fused = fuse(ir, gray)
+            cv2.imshow("blended", fused)
             cv2.waitKey(500)
+    with open("something.pkl", "wb") as f:
+        pickle.dump(data, f)
+
 
 
 if __name__ == "__main__":
