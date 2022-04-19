@@ -11,8 +11,13 @@ const orderRecentFiles = (dir) =>
     .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
 
 const getMostRecentFile = (dir) => {
-  const files = orderRecentFiles(dir);
-  return files.length ? files[0] : null;
+  const files = orderRecentFiles(dir).slice(0,6);
+  return files.length ? files : null;
+};
+
+const getTemperature = () => {
+    const data = fs.readFileSync('./temperature.txt');
+    return data.toString().split("|");
 };
 
 
@@ -33,6 +38,7 @@ con.connect(function(err) {
 function getFileContents(url){
     // DANGER: this could read the whole filesystem to the internet...I don't care
     // (give it a path with '..')
+
     let ret = new Promise((resolve, reject) => {
         fs.readFile(__dirname + url, (err, data) =>{
             if(err != null)
@@ -42,7 +48,6 @@ function getFileContents(url){
     });
     return ret;
 }
-
 
 const requestListener = function (req, res) {
     if(req.url == "/")
@@ -90,42 +95,23 @@ const requestListener = function (req, res) {
                 })
             }
             break;
-        case (req.url == '/test'):
+        case (req.url == '/temperature'):
             res.writeHead(200);
-            res.end("test route " + counter);
+            res.end(JSON.stringify(getTemperature()));
             break;
 	case (req.url == '/post/data/here'):
-		console.log(req);
-		break;
+	    console.log(req);
+	    break;
         default:
             res.writeHead(404);
             res.end("Invalid Route");
             break;
     }
 
-    // Testing database storing
-    counter += 1
-    if (counter % 8 == 0)
-    { 
-        console.log(counter) 
-        // Storing values into database
-        db.insert({min: 50, max: 70, mean: 0})
-        // Get the most updated min and max values for website table
-        min_max_db.update({ _id: "RpTiSugs3px2uSEK" }, { $min: { min: 50 } }, {}, function () {
-            });
-        min_max_db.update({ _id: "RpTiSugs3px2uSEK" }, { $max: { max: counter } }, {}, function () {
-            });
-        // Updates the min max table
-        min_max_db.persistence.compactDatafile()
-        
-        // values can be retrieved here
-        min_max_db.find({ _id: "RpTiSugs3px2uSEK" }, function (err, docs) {
-            console.log(docs)
-            });
-    }
-    
-    
+
 };
+
+
 
 const host = '0.0.0.0';
 const port = 8000;

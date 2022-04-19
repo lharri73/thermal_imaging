@@ -18,11 +18,21 @@
             <div class="show" id="show">
                 <canvas id="canvas"></canvas>
             </div>
-            <div class="temp-display">
-                <h4>Temperature Display</h4><br>
-                <div><label>Min: <output>50</output></label></div>                  
-                <div><label>Max: <output>70</output></label></div>                  
-            </div>    
+            <div class="temperature">
+                <div class="title">Temperature</div>
+                <div class="line">
+                    <label for="">Min</label>
+                    <input type="text" id="inp_min" value="0" disabled>
+                </div>
+                <div class="line">
+                    <label for="">Max</label>
+                    <input type="text" id="inp_max" value="0" disabled>
+                </div>
+                <div class="line">
+                    <label for="">Mean</label>
+                    <input type="text" id="inp_mean" value="0" disabled>
+                </div>
+            </div>
             <div class="update-time">Update time : <label id="update-time">00:00:00</label></div>
             <div class="list">
                 <div class="item" id="img0"><img src="/0.jpg" alt=""></div>

@@ -4,36 +4,13 @@
     box-sizing: border-box;
 }
 
-.link {
-    width: 100%;
-    text-align: center;
-    padding: 20px 0;
-}
-
-.link > div {
-    padding: 5px 10px;
-    color: red;
-    font-size: 24px;
-    cursor: pointer;
-}
-
 img {
     width: 100%;
     object-fit: cover;
 }
 
-.temp-display {
-    width: 180px;
-    height: 100px;
-    background-color: #FFFFFF;
-    position: absolute;
-    top: 10vh;
-    left: calc(100% - 180px);
-    border: 1px solid black;
-
-}    
-
 .home {
+    margin-top: 30px;
     width: 100%;
     padding: 0 20px;
     display: flex;
@@ -72,6 +49,13 @@ img {
     color: #444;
 }
 
+@media only screen and (max-width: 900px) {
+    .home > .show {
+        width: calc(70% - 20px);
+    }
+}
+
+
 @media only screen and (max-width: 600px) {
     .home > .show {
         width: calc(100% - 20px);
@@ -95,5 +79,51 @@ img {
 
     .home > .list > .item {
         width: 33.33%;
+    }
+}
+
+/* +++++++++++++++++++++++++++++++++ */
+
+.home > .temperature {
+    position: absolute;
+    right: 20px;
+    top: 30px;
+    border: 1px solid #444;
+    padding: 15px 30px;
+}
+
+.home > .temperature > .title {
+    width: 100%;
+    font-size: 24px;
+    font-weight: 600;
+    color: #444;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.home > .temperature > .line {
+    width: 100%;
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.home > .temperature > .line > label {
+    font-size: 20px;
+    padding-right: 15px;
+}
+
+.home > .temperature > .line > input {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 5px 10px;
+    font-size: 16px;
+    width: 100px;
+}
+
+@media only screen and (max-width: 800px) {
+    .home > .temperature {
+        position: static;
+        margin: 15px 0;
     }
 }
