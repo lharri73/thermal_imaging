@@ -1,12 +1,13 @@
 import cv2
 import sys
+import numpy as np
 
 W_FACTOR = 32
 H_FACTOR = W_FACTOR
 x_offset = 250   #actually y
 y_offset = 370   # actually x
 
-final_factor = .3
+final_factor = 1
 
 #for i in range(44):
 #    runOnce(i)
@@ -29,6 +30,13 @@ def fuse(ir, rgb):
                        ),
                        interpolation=cv2.INTER_AREA)
     return final
+
+def resize(ir_raw):
+    ir = np.copy(ir_raw)
+    width = int(ir.shape[1]*W_FACTOR)
+    height = int(ir.shape[0]*H_FACTOR)
+    ir = cv2.resize(ir, (width,height), interpolation=cv2.INTER_LINEAR)
+    return ir
 
 if __name__ == "__main__":
     print("run main.py")

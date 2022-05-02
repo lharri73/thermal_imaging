@@ -1,3 +1,4 @@
 fusion/images/*
 !fusion/images/.keep
 web/img/*
+*/__pycache__/*
