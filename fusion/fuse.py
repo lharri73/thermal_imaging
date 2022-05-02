@@ -4,8 +4,8 @@ import numpy as np
 
 W_FACTOR = 32
 H_FACTOR = W_FACTOR
-x_offset = 250   #actually y
-y_offset = 370   # actually x
+x_offset = 320   #actually y
+y_offset = 430   # actually x
 
 final_factor = 1
 
