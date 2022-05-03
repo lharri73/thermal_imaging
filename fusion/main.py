@@ -58,8 +58,13 @@ def get_rects(db):
     cursor.close()
     return data
 
-def add_data(db, id, minVal, maxVal):
-    query = f"INSERT INTO rect_{id} (mins, maxs) VALUES ({minVal}, {maxVal})"
+def add_data(db, id):
+    ids = []
+    temps = []
+    for key, val in id.items():
+        ids.append(str(key))
+        temps.append(str(val))
+    query = f"INSERT INTO rect_temps (max_{', max_'.join(ids)}, DateCreated) VALUES ({','.join(temps)}, NOW())"
     cursor = db.cursor()
     cursor.execute(query)
     db.commit()
@@ -81,6 +86,7 @@ def main(args):
             fused = fuse(ir, gray)
             fused = cv2.cvtColor(fused, cv2.COLOR_GRAY2BGR)
             rects = get_rects(db)
+            rect_temps = {}
             for rect in rects:
                 fused = cv2.rectangle(
                             fused, 
@@ -90,6 +96,7 @@ def main(args):
                             2
                         )
                 snapshot = ir_raw[rect[1]:rect[3],rect[0]:rect[2]]
+                if np.any(snapshot.shape == 0): continue
                 #snapshot = ir_raw[rect[0]:rect[2],rect[1]:rect[3]]
                 minVal = np.min(snapshot)
                 maxVal = np.max(snapshot)
@@ -100,7 +107,9 @@ def main(args):
                 cv2.drawMarker(fused, (rect[0]+amin[1], rect[1]+amin[0]), (255,0,0), markerType=cv2.MARKER_CROSS, markerSize=100, thickness=2, line_type=cv2.LINE_AA)
                 cv2.drawMarker(fused, (rect[0]+amax[1], rect[1]+amax[0]), (0,0,255), markerType=cv2.MARKER_CROSS, markerSize=100, thickness=2, line_type=cv2.LINE_AA)
                 cv2.putText(fused, f"id: {rect[4]}, min: {minVal:.1f}, max: {maxVal:.1f}", (rect[0], rect[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 1.6, rect_color, 3)
-                add_data(db, rect[4], minVal, maxVal)
+                #add_data(db, rect[4], minVal, maxVal)
+                rect_temps.update({rect[4]: maxVal})
+            add_data(db, rect_temps)
 
             if args.scale_factor != 1.0:
                 width = int(float(fused.shape[1])*args.scale_factor)

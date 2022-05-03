@@ -1,10 +1,26 @@
+/*
 var timeoutId = setTimeout(function(){
     window.location.reload(1);
 }, 10000);
+*/
+
+
+/*
+autoRender = setInterval(reRender, 5000)
+var element = document.getElementById('list'),
+    autoRender;
+
+function reRender() {
+    element.style.display = 'none';
+    element.style.display = 'block';
+    console.log("re-rendered");
+}
+*/
 
 var isDrawing = false;
 var startX, startY;
 var ratio = [1,1];
+
 
 window.onload = function(){
     const curDate = new Date();
@@ -14,7 +30,36 @@ window.onload = function(){
     var ctx = canvas.getContext('2d');
     setupAndRegister(canvas, ctx)
     setupClickEvents(canvas, ctx);
+
+    // Calling alerts here
+    document.getElementById('update-time').innerHTML = curTime;
+    var threshold = document.getElementById('threshold').value
+    var current_temp = 49;
+
+    if (current_temp > threshold) {
+        document.getElementById('alert').style.visibility = "visible";
+        fetch("/send_alert", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(true)
+          });
+        
+    }
+    else {document.getElementById('alert').style.visibility = "invisible";}
+
 }
+
+
+function getTemp(ID){
+    return new Promise((resolve, reject) =>{
+        fetch(`/temperature`).then((resp, data) => {
+            resp.text().then(val =>{
+                resolve(val);
+            })
+        });
+    });
+}
+
 
 function sendClear(e){
     fetch("/clear_rect", {
@@ -51,36 +96,49 @@ function fill_canvas(canvas, ctx, img){
 
 function setupClickEvents(canvas, ctx){
     canvas.onmousedown = function(e){
-        let mouseX = e.offsetX;
-        let mouseY = e.offsetY;
-        if(isDrawing){
-            isDrawing=false;
-            ctx.beginPath();
-            ctx.rect(startX,startY,mouseX-startX,mouseY-startY);
-            ctx.fill();
-            canvas.style.cursor="default";
-            let data = {
-                minX: Math.min(startX, mouseX) * ratio[0],
-                maxX: Math.max(startX, mouseX) * ratio[0],
-                minY: Math.min(startY, mouseY) * ratio[1],
-                maxY: Math.max(startY, mouseY) * ratio[1]
-            };
-            fetch("/add_rect", {
-              method: "POST",
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify(data)
+        if(e.which == 1){
+            // left mouse button
+            let mouseX = e.offsetX;
+            let mouseY = e.offsetY;
+            if(isDrawing){
+                isDrawing=false;
+                ctx.beginPath();
+                ctx.rect(startX,startY,mouseX-startX,mouseY-startY);
+                ctx.fill();
+                canvas.style.cursor="default";
+                let data = {
+                    minX: Math.min(startX, mouseX) * ratio[0],
+                    maxX: Math.max(startX, mouseX) * ratio[0],
+                    minY: Math.min(startY, mouseY) * ratio[1],
+                    maxY: Math.max(startY, mouseY) * ratio[1]
+                };
+                fetch("/add_rect", {
+                  method: "POST",
+                  headers: {'Content-Type': 'application/json'},
+                  body: JSON.stringify(data)
+                });
+                timeoutId = setTimeout(function(){
+                    window.location.reload(1);
+                }, 10000);
+            }else{
+                isDrawing=true;
+                startX=mouseX;
+                startY=mouseY;
+                canvas.style.cursor="crosshair";
+                clearTimeout(timeoutId);
+            }
+        }else if(e.which == 3){
+            // right mouse button
+            fetch("/rem_rect", {
+                method: "POST", 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({x: e.offsetX*ratio[0], y: e.offsetY*ratio[1]})
             });
-            timeoutId = setTimeout(function(){
-                window.location.reload(1);
-            }, 10000);
-        }else{
-            isDrawing=true;
-            startX=mouseX;
-            startY=mouseY;
-            canvas.style.cursor="crosshair";
-            clearTimeout(timeoutId);
         }
     }
+    canvas.oncontextmenu = function (e) {
+        e.preventDefault();
+    };
 }
 
 /*

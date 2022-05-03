@@ -23,7 +23,7 @@ img {
     width: 40%;
 }
 
-.home > .list {
+.home > #list {
     display: flex;
     flex-flow: row;
     align-items: center;
@@ -31,14 +31,14 @@ img {
     padding-top: 20px;
 }
 
-.home > .list > .item {
+.home > #list > .item {
     width: calc(20%);
     cursor: pointer;
     padding: 2px;
     border: 1px solid transparent;
 }
 
-.home > .list > .item:hover > img {
+.home > #list > .item:hover > img {
     opacity: 0.7;
 }
 
@@ -71,13 +71,13 @@ img {
         padding: 0 10px;
     }
 
-    .home > .list {
+    .home > #list {
         flex-flow: row wrap;
         align-items: center;
         justify-content: center;
     }
 
-    .home > .list > .item {
+    .home > #list > .item {
         width: 33.33%;
     }
 }
@@ -130,4 +130,47 @@ img {
         position: static;
         margin: 15px 0;
     }
+}
+
+
+/* +++++++++++++++++++++++++++++++++ */
+/* The alert message box */
+.alert {
+    top: 40%;
+    left: 38%;
+    position: fixed;
+    padding: 50px;
+    background-color: #f44336; /* Red */
+    color: white;
+    margin-bottom: 15px;
+    visibility: hidden
+}
+
+/* The close button */
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
+}
+
+
+.thresh {
+    left: 83%;
+    width: 16%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-radius: 4px;
+    position: absolute;
 }

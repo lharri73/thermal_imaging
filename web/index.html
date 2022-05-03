@@ -11,9 +11,12 @@
 
         <link rel="stylesheet" href="./index.css">
         <script src="js/index.js"></script>
-    </head>
 
+    </head>
+    
+    
     <body>
+
         <div class="home">
             <div class="show" id="show">
                 <canvas id="canvas"></canvas>
@@ -35,13 +38,34 @@
                 <button type="button" id="clearBut">Clear Rects</button>
             </div>
             <div class="update-time">Update time : <label id="update-time">00:00:00</label></div>
-            <div class="list">
+            <div id="list">
                 <div class="item" id="img0"><img src="/0.jpg" alt=""></div>
                 <div class="item" id="img1"><img src="/1.jpg" alt=""></div>
                 <div class="item" id="img2"><img src="/2.jpg" alt=""></div>
                 <div class="item" id="img3"><img src="/3.jpg" alt=""></div>
                 <div class="item" id="img4"><img src="/4.jpg" alt=""></div>
             </div>
+
+
+            <div class="thresh">
+                <label for="threshold"> 
+                    <center> 
+                        <strong> Set threshold</strong> 
+                    </center>
+                </label>
+                <input type="number" id="threshold" name="threshold" value="50">
+            </div>
+
+
+
+
+            <div class="alert" id="alert">
+                <span class="closebtn" id="myPopup" onclick="this.parentElement.style.display='none';">&times;</span> 
+                <center>
+                    <strong>Danger!</strong> Temperature is over threshold.
+                </center>
+            </div>
         </div>
+
     </body>
 </html>
