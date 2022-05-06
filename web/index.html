@@ -20,40 +20,23 @@
         <div class="home">
             <div class="show" id="show">
                 <canvas id="canvas"></canvas>
+
             </div>
             <div class="temperature">
-                <div class="title">Temperature</div>
-                <div class="line">
-                    <label for="">Min</label>
-                    <input type="text" id="inp_min" value="0" disabled>
-                </div>
-                <div class="line">
-                    <label for="">Max</label>
-                    <input type="text" id="inp_max" value="0" disabled>
-                </div>
-                <div class="line">
-                    <label for="">Mean</label>
-                    <input type="text" id="inp_mean" value="0" disabled>
-                </div>
                 <button type="button" id="clearBut">Clear Rects</button>
             </div>
             <div class="update-time">Update time : <label id="update-time">00:00:00</label></div>
             <div id="list">
-                <div class="item" id="img0"><img src="/0.jpg" alt=""></div>
-                <div class="item" id="img1"><img src="/1.jpg" alt=""></div>
-                <div class="item" id="img2"><img src="/2.jpg" alt=""></div>
-                <div class="item" id="img3"><img src="/3.jpg" alt=""></div>
-                <div class="item" id="img4"><img src="/4.jpg" alt=""></div>
+                <div class="item" id="img0"><img src="/0.jpg" alt="" id="img0_tag"></div>
+                <div class="item" id="img1"><img src="/1.jpg" alt="" id="img1_tag"></div>
+                <div class="item" id="img2"><img src="/2.jpg" alt="" id="img2_tag"></div>
+                <div class="item" id="img3"><img src="/3.jpg" alt="" id="img3_tag"></div>
+                <div class="item" id="img4"><img src="/4.jpg" alt="" id="img4_tag"></div>
             </div>
 
-
-            <div class="thresh">
-                <label for="threshold"> 
-                    <center> 
-                        <strong> Set threshold</strong> 
-                    </center>
-                </label>
-                <input type="number" id="threshold" name="threshold" value="50">
+            <div class="thresh">Set Threshold: <label id="thresh">0</label>
+                <input type="number" id="threshold" name="threshold" value=0>
+                <button type="button" id="threshold_button" onclick="getAlertInput()">Enter</button>
             </div>
 
 

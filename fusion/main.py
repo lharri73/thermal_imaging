@@ -64,7 +64,9 @@ def add_data(db, id):
     for key, val in id.items():
         ids.append(str(key))
         temps.append(str(val))
+    if len(ids) == 0: return
     query = f"INSERT INTO rect_temps (max_{', max_'.join(ids)}, DateCreated) VALUES ({','.join(temps)}, NOW())"
+    print(query)
     cursor = db.cursor()
     cursor.execute(query)
     db.commit()
@@ -96,7 +98,7 @@ def main(args):
                             2
                         )
                 snapshot = ir_raw[rect[1]:rect[3],rect[0]:rect[2]]
-                if np.any(snapshot.shape == 0): continue
+                if np.any(np.array(snapshot.shape) == 0): continue
                 #snapshot = ir_raw[rect[0]:rect[2],rect[1]:rect[3]]
                 minVal = np.min(snapshot)
                 maxVal = np.max(snapshot)

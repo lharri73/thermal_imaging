@@ -1,8 +1,5 @@
-/*
-var timeoutId = setTimeout(function(){
-    window.location.reload(1);
-}, 10000);
-*/
+
+
 
 
 /*
@@ -20,37 +17,79 @@ function reRender() {
 var isDrawing = false;
 var startX, startY;
 var ratio = [1,1];
+var thresh_val = 0
+var canvas = null;
+var ctx = null;
 
+function toBinary(string) {
+  const codeUnits = new Uint16Array(string.length);
+  for (let i = 0; i < codeUnits.length; i++) {
+    codeUnits[i] = string.charCodeAt(i);
+  }
+  const charCodes = new Uint8Array(codeUnits.buffer);
+  let result = '';
+  for (let i = 0; i < charCodes.byteLength; i++) {
+    result += String.fromCharCode(charCodes[i]);
+  }
+  return result;
+}
+
+var timeoutId = setInterval(function(){
+    for(let i=0; i <6; i++){
+        let img = new Image();
+        img.src = `/${i}.jpg`;
+        img.onload = function(){
+            if(i == 0){
+                fill_canvas(img);
+            }else{
+                let cur_img = document.getElementById(`img${i-1}_tag`);
+                cur_img.src = cur_img.src;
+            }
+        }
+    }
+}, 1000);
 
 window.onload = function(){
     const curDate = new Date();
-    const curTime = `${curDate.getHours()}:${curDate.getMinutes()}:${curDate.getSeconds()}`
+    const curTime = `${curDate.getHours()}:${curDate.getMinutes()}:${curDate.getSeconds()}`;
+
     document.getElementById('update-time').innerHTML = curTime;
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
-    setupAndRegister(canvas, ctx)
+    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
+    setupAndRegister(canvas, ctx);
     setupClickEvents(canvas, ctx);
 
-    // Calling alerts here
-    document.getElementById('update-time').innerHTML = curTime;
-    var threshold = document.getElementById('threshold').value
-    var current_temp = 49;
 
-    if (current_temp > threshold) {
-        document.getElementById('alert').style.visibility = "visible";
-        fetch("/send_alert", {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(true)
-          });
-        
-    }
-    else {document.getElementById('alert').style.visibility = "invisible";}
+    // Calling alerts here
+    document.getElementById('thresh').innerHTML = localStorage.getItem('stored_thresh')
+    var threshold = document.getElementById('thresh').innerHTML
+    
+    getTemp().then(temp=> {
+        console.log(temp)
+        if (Number(temp) > Number(threshold)) {
+            document.getElementById('alert').style.visibility = "visible";
+            fetch("/send_alert", {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(true)
+              });
+            
+        }
+        else {document.getElementById('alert').style.visibility = "invisible";}
+    })
+
+
+
 
 }
 
+function getAlertInput()
+{
+    document.getElementById('thresh').innerHTML = document.getElementById('threshold').value 
+    localStorage.setItem('stored_thresh', document.getElementById('thresh').innerHTML);
+}
 
-function getTemp(ID){
+function getTemp(){
     return new Promise((resolve, reject) =>{
         fetch(`/temperature`).then((resp, data) => {
             resp.text().then(val =>{
@@ -71,17 +110,17 @@ function sendClear(e){
     });
 }
 
-function setupAndRegister(canvas, ctx){
+function setupAndRegister(){
     var img = new Image();
     img.src = '/0.jpg';
     img.onload = function(){
-        fill_canvas(canvas, ctx, img);
+        fill_canvas(img);
     }
     document.getElementById("clearBut").onclick = sendClear;
 }
 
 
-function fill_canvas(canvas, ctx, img){
+function fill_canvas(img){
     // CREATE CANVAS CONTEXT.
     let asr = img.width / img.height;
 
@@ -94,7 +133,7 @@ function fill_canvas(canvas, ctx, img){
     ratio[1] = img.height / height;
 }
 
-function setupClickEvents(canvas, ctx){
+function setupClickEvents(){
     canvas.onmousedown = function(e){
         if(e.which == 1){
             // left mouse button
@@ -117,15 +156,12 @@ function setupClickEvents(canvas, ctx){
                   headers: {'Content-Type': 'application/json'},
                   body: JSON.stringify(data)
                 });
-                timeoutId = setTimeout(function(){
-                    window.location.reload(1);
-                }, 10000);
+                window.location.reload(1);
             }else{
                 isDrawing=true;
                 startX=mouseX;
                 startY=mouseY;
                 canvas.style.cursor="crosshair";
-                clearTimeout(timeoutId);
             }
         }else if(e.which == 3){
             // right mouse button
@@ -141,61 +177,3 @@ function setupClickEvents(canvas, ctx){
     };
 }
 
-/*
-$(document).ready(function () {
-
-    var images = "";
-
-    setInterval(update, 5000);
-
-    function update() {
-
-        $.get("./recent")
-        .done(function(response) { 
-            if (response != "")
-            {
-                let json = JSON.parse(response);
-                if (json[0].file == images)
-                    return;
-
-                insertImages(json[0].file);
-
-                var currentdate = new Date(); 
-                var datetime = currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
-                + currentdate.getSeconds() + "&nbsp;"
-                + currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear();
-                $('#update-time').html(datetime);
-            }
-        }).fail(function() { 
-        });
-
-        $.get("./temperature")
-        .done(function(response) { 
-            if (response != "")
-            {
-                let json = JSON.parse(response);
-
-                mperature(json[0], json[1]);
-            }
-        }).fail(function() { 
-        });
-    }
-
-    function insertImages(url) {
-        for (let i = 4; i > 0; i--) {
-            $('#img'+i+">img").attr('src', $('#img'+(i-1)+">img").attr('src'));
-        }
-        $('#img0>img').attr('src', $('#imgCurrent').attr('src'));
-        $('#imgCurrent').attr('src',url);
-        images = url;
-    }
-
-    function mperature(min, max) {
-        $('#inp_min').val(min);
-        $('#inp_max').val(max);
-    }
-});
-*/

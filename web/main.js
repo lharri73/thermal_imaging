@@ -115,6 +115,9 @@ const requestListener = function (req, res) {
                 res.end("Invalid image format. should be #.jpg");
             }else{
                 res.setHeader("Content-Type", "image/jpg");
+                res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                res.setHeader("Pragma", "no-cache");
+                res.setHeader("Expires", "0");
                 let files = orderRecentFiles(__dirname + "/img");
                 let indx = req.url.match(/(\d+)\.jpg$/)[1];
                 if(files.length < indx){
