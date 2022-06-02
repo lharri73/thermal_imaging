@@ -1,5 +1,12 @@
 # Infrared Thermal Imaging
 
+In this project, we create a low-cost thermal monitoring system using a Raspber Pi, a NoIR camera, and a FLIR Lepton thermal imaging sensor.
+We use OpenCV and Python to fuse these two image modalities, and allow the user to specify regions of interest to monitor within the image. 
+This project features a basic web interface that displays the 6 most recent images, allows the user to specify regions of interest, and shows the min, max, and
+mean temperature of each region. The max temperature of each region is stored within a databse, hosted locally on the Raspberry pi, and can easily be
+connected to a larger data monitoring system. 
+
+
 ## Setup
 If this has been run on the raspberry-pi before, then you can skip this step. 
 
@@ -8,13 +15,6 @@ If this has been run on the raspberry-pi before, then you can skip this step.
     sudo apt-get install python-opencv python-numpy
     ```
 
-1. Install the `pylepton` package:
-    ```bash
-    cd /tmp
-    git clone https://github.com/groupgets/pylepton.git
-    cd pylepton
-    pip install .
-    ```
 
 1. Enable the spi on the raspberry pi.
     1. Run `sudo raspi-config`
@@ -30,12 +30,21 @@ If this has been run on the raspberry-pi before, then you can skip this step.
     ```
     console=tty1 root=PARTUUID=336afa3f-02 rootfstype=ext4 fsck.repair=yes rootwait spidev.bufsiz=131072
     ```
-
 1. Reboot the device
 
-## Files
-- ax8.py: Captures images from the FLIR AX8
-- camera.py: Captures a single image from the thermal and NoIR cameras.
-- calibrate.py: Captures and displays images from the thermal and NoIR every 0.5s. 
-   This code can be used to calibrate the camera, but is too slow for the RPI. 
-- old/ : Code from the previous team's senior design team. 
+1. Install python requirements:
+    ```bash
+    python3 -m pip install -r requirements.txt
+    ```
+
+1. Setup the database
+    ```bash
+    mysql -u root < database/init.sql
+    ```
+
+1. Start the server!
+    ```bash
+    cd web && ./start.sh
+    ```
+    
+    The webserver will be available at port 8000 of the device running the `start.sh` script. 
